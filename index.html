@@ -620,7 +620,7 @@ $('#work-list').innerHTML = CASES.map((c,i)=>`
     <div class="case__head rv"><h3 class="h2" style="font-size:clamp(34px,3.6vw,52px)">${c.title}</h3><span class="case__idx">0${i+1} / 0${CASES.length}</span></div>
     <p class="lede case__sub rv">${c.sub}</p>
     <div class="rv">${metaHTML(c.meta)}</div>
-    <button class="btn btn--ghost btn--sm rv" data-case="${i}">See case study</button>
+    <button class="btn btn--primary btn--sm rv" data-case="${i}">See case study</button>
   </article>`).join('');
 
 /* ── Render: clients ─────────────────────────────────── */
