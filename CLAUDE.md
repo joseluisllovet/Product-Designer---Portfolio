@@ -26,6 +26,7 @@ Web personal de portfolio (Product Designer & UX Specialist, Aarhus). Habla con 
 - Comparador before/after: se arrastra (pointer events, `touch-action: pan-y`), teclas de flecha/Home/End, y barrido automático (18%↔82%, 6 s) mientras está en pantalla hasta la primera interacción. Sin barrido con prefers-reduced-motion.
 - Modales pequeños para clientes y testimonios.
 - Animaciones de entrada al hacer scroll (`.rv` → `.in`; al terminar se quitan ambas clases para que vuelvan los hover/press propios), cifras que cuentan (`data-count` + `data-suffix`).
+- Easter egg: 5 clics seguidos (máx. 1,5 s entre clics) en la foto del hero → lluvia de bitcoins por toda la pantalla (canvas `.coin-rain`, sin bloquear clics, se borra al terminar). Clics 1–4 dan un pequeño "apretón" a la foto. Repetible, no se guarda nada, desactivado con prefers-reduced-motion. El ₿ se dibuja a mano (B + dos barras) para no depender de la fuente. Código en `initBitcoinRain` al final de `main.js`. (Se probó un arrugado de papel en 3D y José lo descartó.)
 - Botones: primario gris grafito `#28282c` (hover `#3a3a3f`), radio 11 px (9 px en `.btn--sm`), no píldora. Las etiquetas/pills sí son redondas.
 
 ## Contenido actual

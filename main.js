@@ -446,4 +446,187 @@ const countIO = new IntersectionObserver(
 );
 $$('[data-count]').forEach((el) => countIO.observe(el));
 
+/* Easter egg */
+// Click the hero photo 5 times in a row and bitcoins rain down the screen.
+// Nothing is stored; it can be triggered again with 5 more clicks.
+function initBitcoinRain(figure) {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const GRAVITY = 1500,
+    MAX_SPEED = 950;
+  let clicks = 0,
+    clickTimer = 0,
+    canvas,
+    ctx,
+    coins = [],
+    sprites,
+    last = 0,
+    raf = 0;
+
+  const rand = (a, b) => a + Math.random() * (b - a);
+
+  // One coin face drawn once, then stamped for every coin. Bitcoin orange,
+  // with the ₿ tilted the way it is in the logo.
+  function drawCoin(size, side) {
+    const c = document.createElement('canvas');
+    c.width = c.height = size;
+    const g = c.getContext('2d'),
+      r = size / 2;
+    g.translate(r, r);
+    if (side === 'edge') {
+      g.fillStyle = '#b35f00';
+      g.beginPath();
+      g.arc(0, 0, r * 0.98, 0, Math.PI * 2);
+      g.fill();
+      return c;
+    }
+    const face = g.createRadialGradient(-r * 0.35, -r * 0.4, r * 0.1, 0, 0, r);
+    face.addColorStop(0, side === 'back' ? '#f4b24f' : '#ffd27a');
+    face.addColorStop(0.55, side === 'back' ? '#e0820f' : '#f7931a');
+    face.addColorStop(1, '#c46a00');
+    g.fillStyle = face;
+    g.beginPath();
+    g.arc(0, 0, r * 0.98, 0, Math.PI * 2);
+    g.fill();
+    g.strokeStyle = 'rgba(255, 255, 255, .38)';
+    g.lineWidth = r * 0.07;
+    g.beginPath();
+    g.arc(0, 0, r * 0.8, 0, Math.PI * 2);
+    g.stroke();
+    // The ₿ is drawn as a B with two short bars, so it doesn't depend on the
+    // font having the ₿ character.
+    g.rotate((14 * Math.PI) / 180);
+    const f = r * 1.1;
+    g.font = `800 ${f}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`;
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    const w = g.measureText('B').width,
+      left = -w / 2;
+    const symbol = (colour, dx, dy) => {
+      g.fillStyle = colour;
+      g.fillText('B', dx, dy + f * 0.04);
+      for (const x of [left + w * 0.22, left + w * 0.5]) {
+        g.fillRect(x + dx, -f * 0.5 + dy, f * 0.09, f * 0.16);
+        g.fillRect(x + dx, f * 0.34 + dy, f * 0.09, f * 0.16);
+      }
+    };
+    symbol('rgba(150, 70, 0, .45)', r * 0.04, r * 0.05);
+    symbol('#fff', 0, 0);
+    return c;
+  }
+
+  function setup() {
+    canvas = document.createElement('canvas');
+    canvas.className = 'coin-rain';
+    canvas.setAttribute('aria-hidden', 'true');
+    ctx = canvas.getContext('2d');
+    const px = 128;
+    sprites = {
+      front: drawCoin(px, 'front'),
+      back: drawCoin(px, 'back'),
+      edge: drawCoin(px, 'edge'),
+    };
+  }
+
+  function resize() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    canvas.width = innerWidth * dpr;
+    canvas.height = innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function rain() {
+    if (!canvas) setup();
+    if (!canvas.isConnected) {
+      document.body.append(canvas);
+      resize();
+    }
+    const count = Math.round(Math.min(130, Math.max(45, innerWidth / 11)));
+    for (let i = 0; i < count; i++) {
+      const size = rand(18, 46);
+      coins.push({
+        x: rand(-20, innerWidth + 20),
+        y: -size - rand(0, 40),
+        size,
+        vx: rand(-40, 40),
+        vy: rand(40, 260),
+        delay: rand(0, 1.6),
+        tilt: rand(-0.5, 0.5),
+        vtilt: rand(-2, 2),
+        flip: rand(0, Math.PI * 2),
+        vflip: rand(4, 11) * (Math.random() < 0.5 ? -1 : 1),
+      });
+    }
+    // small coins behind, big ones in front
+    coins.sort((a, b) => a.size - b.size);
+    if (!raf) {
+      last = performance.now();
+      raf = requestAnimationFrame(frame);
+    }
+  }
+
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    coins = coins.filter((c) => c.y < innerHeight + c.size);
+    for (const c of coins) {
+      if (c.delay > 0) {
+        c.delay -= dt;
+        continue;
+      }
+      c.vy = Math.min(MAX_SPEED, c.vy + GRAVITY * dt * ((c.size / 46) * 0.4 + 0.6));
+      c.x += c.vx * dt;
+      c.y += c.vy * dt;
+      c.tilt += c.vtilt * dt;
+      c.flip += c.vflip * dt;
+      const spin = Math.cos(c.flip),
+        width = Math.max(0.06, Math.abs(spin));
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.rotate(c.tilt);
+      // the coin's edge peeks out on the side it is turning towards
+      ctx.drawImage(
+        sprites.edge,
+        (-c.size / 2) * width + Math.sin(c.flip) * c.size * 0.07,
+        -c.size / 2,
+        c.size * width,
+        c.size,
+      );
+      ctx.drawImage(
+        spin >= 0 ? sprites.front : sprites.back,
+        (-c.size / 2) * width,
+        -c.size / 2,
+        c.size * width,
+        c.size,
+      );
+      ctx.restore();
+    }
+    if (coins.length) raf = requestAnimationFrame(frame);
+    else {
+      raf = 0;
+      canvas.remove();
+    }
+  }
+
+  figure.addEventListener('click', () => {
+    clearTimeout(clickTimer);
+    clicks++;
+    if (clicks >= 5) {
+      clicks = 0;
+      if (!reduce) rain();
+      return;
+    }
+    if (!reduce)
+      figure.animate(
+        [{ transform: 'none' }, { transform: 'scale(.985) rotate(-.4deg)' }, { transform: 'none' }],
+        { duration: 240, easing: 'ease-out' },
+      );
+    clickTimer = setTimeout(() => (clicks = 0), 1500);
+  });
+  addEventListener('resize', () => {
+    if (canvas?.isConnected) resize();
+  });
+}
+initBitcoinRain($('.hero__figure'));
+
 $('#year').textContent = new Date().getFullYear();
