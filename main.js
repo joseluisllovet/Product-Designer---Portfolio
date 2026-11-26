@@ -451,14 +451,14 @@ $$('[data-count]').forEach((el) => countIO.observe(el));
 // Nothing is stored; it can be triggered again with 5 more clicks.
 function initBitcoinRain(figure) {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const GRAVITY = 1500,
-    MAX_SPEED = 950;
+  const GRAVITY = 520,
+    MAX_SPEED = 420;
   let clicks = 0,
     clickTimer = 0,
     canvas,
     ctx,
     coins = [],
-    sprites,
+    sprite,
     last = 0,
     raf = 0;
 
@@ -466,22 +466,15 @@ function initBitcoinRain(figure) {
 
   // One coin face drawn once, then stamped for every coin. Bitcoin orange,
   // with the ₿ tilted the way it is in the logo.
-  function drawCoin(size, side) {
+  function drawCoin(size) {
     const c = document.createElement('canvas');
     c.width = c.height = size;
     const g = c.getContext('2d'),
       r = size / 2;
     g.translate(r, r);
-    if (side === 'edge') {
-      g.fillStyle = '#b35f00';
-      g.beginPath();
-      g.arc(0, 0, r * 0.98, 0, Math.PI * 2);
-      g.fill();
-      return c;
-    }
     const face = g.createRadialGradient(-r * 0.35, -r * 0.4, r * 0.1, 0, 0, r);
-    face.addColorStop(0, side === 'back' ? '#f4b24f' : '#ffd27a');
-    face.addColorStop(0.55, side === 'back' ? '#e0820f' : '#f7931a');
+    face.addColorStop(0, '#ffd27a');
+    face.addColorStop(0.55, '#f7931a');
     face.addColorStop(1, '#c46a00');
     g.fillStyle = face;
     g.beginPath();
@@ -519,12 +512,7 @@ function initBitcoinRain(figure) {
     canvas.className = 'coin-rain';
     canvas.setAttribute('aria-hidden', 'true');
     ctx = canvas.getContext('2d');
-    const px = 128;
-    sprites = {
-      front: drawCoin(px, 'front'),
-      back: drawCoin(px, 'back'),
-      edge: drawCoin(px, 'edge'),
-    };
+    sprite = drawCoin(128);
   }
 
   function resize() {
@@ -540,20 +528,17 @@ function initBitcoinRain(figure) {
       document.body.append(canvas);
       resize();
     }
-    const count = Math.round(Math.min(130, Math.max(45, innerWidth / 11)));
+    const count = Math.round(Math.min(24, Math.max(10, innerWidth / 60)));
     for (let i = 0; i < count; i++) {
-      const size = rand(18, 46);
+      const size = rand(24, 40);
       coins.push({
         x: rand(-20, innerWidth + 20),
         y: -size - rand(0, 40),
         size,
-        vx: rand(-40, 40),
-        vy: rand(40, 260),
-        delay: rand(0, 1.6),
-        tilt: rand(-0.5, 0.5),
-        vtilt: rand(-2, 2),
-        flip: rand(0, Math.PI * 2),
-        vflip: rand(4, 11) * (Math.random() < 0.5 ? -1 : 1),
+        vx: rand(-20, 20),
+        vy: rand(20, 90),
+        delay: rand(0, 2.4),
+        tilt: rand(-0.15, 0.15),
       });
     }
     // small coins behind, big ones in front
@@ -574,31 +559,14 @@ function initBitcoinRain(figure) {
         c.delay -= dt;
         continue;
       }
-      c.vy = Math.min(MAX_SPEED, c.vy + GRAVITY * dt * ((c.size / 46) * 0.4 + 0.6));
+      c.vy = Math.min(MAX_SPEED, c.vy + GRAVITY * dt * ((c.size / 40) * 0.4 + 0.6));
       c.x += c.vx * dt;
       c.y += c.vy * dt;
-      c.tilt += c.vtilt * dt;
-      c.flip += c.vflip * dt;
-      const spin = Math.cos(c.flip),
-        width = Math.max(0.06, Math.abs(spin));
       ctx.save();
+      ctx.globalAlpha = 0.9;
       ctx.translate(c.x, c.y);
       ctx.rotate(c.tilt);
-      // the coin's edge peeks out on the side it is turning towards
-      ctx.drawImage(
-        sprites.edge,
-        (-c.size / 2) * width + Math.sin(c.flip) * c.size * 0.07,
-        -c.size / 2,
-        c.size * width,
-        c.size,
-      );
-      ctx.drawImage(
-        spin >= 0 ? sprites.front : sprites.back,
-        (-c.size / 2) * width,
-        -c.size / 2,
-        c.size * width,
-        c.size,
-      );
+      ctx.drawImage(sprite, -c.size / 2, -c.size / 2, c.size, c.size);
       ctx.restore();
     }
     if (coins.length) raf = requestAnimationFrame(frame);
