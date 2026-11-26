@@ -723,7 +723,7 @@ function caseHTML(i) {
     <p class="label">Case study</p>
     <h2 class="display" id="case-title">${c.title}</h2>
     <p class="lede">${c.sub.replace(/<\/?strong>/g, '')}</p>
-    ${metaHTML([c.meta[0], c.details[0], c.details[1], c.meta[2], c.details[2]])}
+    ${metaHTML([...c.meta, ...c.details])}
     <div data-carousel>
       <div class="track">${slides}</div>
       <div class="carousel__ctrl"><div class="dots"></div>${arrows}</div>
@@ -907,12 +907,19 @@ document.addEventListener('keydown', e => {
   if (media && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openCase(+media.dataset.case); }
 });
 
-/* Scroll reveal, staggered among siblings */
+/* Scroll reveal, staggered among siblings. Once an element is in, the reveal
+   classes come off so its own hover and press transitions work again. */
 const revealIO = new IntersectionObserver(entries => entries.forEach(entry => {
   if (!entry.isIntersecting) return;
   const el = entry.target;
   const siblings = [...el.parentElement.children].filter(x => x.classList.contains('rv'));
   el.style.transitionDelay = Math.min(siblings.indexOf(el), 5) * 70 + 'ms';
+  el.addEventListener('transitionend', function done(e) {
+    if (e.target !== el || e.propertyName !== 'opacity') return;
+    el.removeEventListener('transitionend', done);
+    el.classList.remove('rv', 'in');
+    el.style.transitionDelay = '';
+  });
   el.classList.add('in');
   revealIO.unobserve(el);
 }), { rootMargin: '0px 0px -8% 0px' });
