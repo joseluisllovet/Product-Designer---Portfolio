@@ -33,18 +33,19 @@ Web personal de portfolio (Product Designer & UX Specialist, Aarhus). Habla con 
 - Hero: "Product / Designer & / UX Specialist." (3 líneas) + "6+ years crafting digital interfaces, and 3+ years in product teams, most recently on data-heavy B2B SaaS…". Badge "Open to new opportunities" COMENTADO en el HTML (José aún no decide).
 - Stats: 6+ años de diseño · 3+ años de product design · 3 design systems desde cero · 3 productos diseñados enteramente por él.
 - Casos: AeroGuest Design System, Digital Keys (AeroGuest), Formalize.
-- Email de contacto: jlllovet00@gmail.com. Teléfono deliberadamente fuera de la web.
+- Side projects: solo josellovet.com, en una tarjeta horizontal (imagen a la izquierda, texto a la derecha; apilada por debajo de 860 px). Dr. Edler y el placeholder "Dolor" se quitaron a petición de José.
+- Email de contacto: jlllovet00@gmail.com. Los botones "Get in touch" abren `mailto:` a ese email. Teléfono deliberadamente fuera de la web.
+- Enlaces: LinkedIn (`linkedin.com/in/joseluisllr25`) y GitHub (`github.com/joseluisllovet`) en barra, menú y footer. En la barra, GitHub es un enlace de texto (`.nav__text`) en el sitio donde antes estaba "Download CV"; el CV sigue en hero, menú móvil, Experience y footer. En Side projects, la tarjeta josellovet.com lleva además solo el icono de GitHub (`.card__icon`) junto a su enlace.
 
 ## Pendiente
 - Testimonios: siguen en lorem ipsum. Kristoffer Abell (antiguo jefe) va a mandar una referencia.
-- Tercer side project: lorem ipsum.
 - Todas las imágenes de casos y comparadores son maquetas CSS grises: sustituir por capturas reales de Figma.
 - Nombrar el tercer design system en "How I work" cuando José diga cuál es.
-- Comprobar que bewegungsmedizin-kiel.de está online (enlace en Side projects).
 - Propuesta pendiente de confirmar: hover de los casos en "Selected work" = etiqueta negra "View case →" que sigue al cursor + zoom suave de la imagen (~3%) + flecha que entra junto al título. Solo en dispositivos con hover; respetar prefers-reduced-motion.
 - Publicar en Vercel.
 
 ## Cómo trabajar
+- **Flujo obligatorio:** todo cambio se enseña primero a José en una vista previa (artifact con la web completa). Solo se hace commit y push a GitHub cuando José lo confirma.
 - Tras cada cambio: abrir en navegador y revisar escritorio (1440 px) y móvil (390 px); probar abrir/cerrar casos, menú y comparador.
 - Cambios de contenido: editar `content.js` (o el texto fijo en `index.html`), no el maquetado.
 - No cambiar el layout salvo que José lo pida.

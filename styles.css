@@ -245,12 +245,12 @@ section[id] {
   align-items: center;
   gap: 10px;
 }
-.nav__cv {
+.nav__text {
   font-size: 14.5px;
   color: var(--muted);
   margin-right: 10px;
 }
-.nav__cv:hover {
+.nav__text:hover {
   color: var(--ink);
 }
 .nav__menu {
@@ -435,55 +435,6 @@ section[id] {
   border-radius: 8px;
   background: linear-gradient(to top, #e8edfd 0 30%, transparent 30%), #f7f7f7;
 }
-.mock-phone {
-  width: 46%;
-  max-width: 220px;
-  aspect-ratio: 9/19;
-  background: #fff;
-  border: 7px solid #161616;
-  border-radius: 34px;
-  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 28px 12px 12px;
-  position: relative;
-}
-.mock-phone::before {
-  content: '';
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 34%;
-  height: 14px;
-  border-radius: 10px;
-  background: #161616;
-}
-.mock-phone i {
-  border-radius: 8px;
-  background: #f1f1f0;
-}
-.mock-phone i:nth-child(1) {
-  height: 14px;
-  width: 60%;
-}
-.mock-phone i:nth-child(2) {
-  height: 80px;
-}
-.mock-phone i:nth-child(3) {
-  height: 46px;
-}
-.mock-phone i:nth-child(4) {
-  flex: 1;
-}
-.mock-phone.dark {
-  background: #141414;
-}
-.mock-phone.dark i {
-  background: #262626;
-}
-
 /* Stats */
 #about .h2 {
   max-width: 24ch;
@@ -540,20 +491,21 @@ section[id] {
   gap: 12px;
 }
 
-/* Cards (personal projects) */
-.cards {
+/* Side project: one horizontal card, image left and text right */
+.card {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: center;
   margin-top: 56px;
 }
 .card__media {
-  aspect-ratio: 4/4.3;
+  aspect-ratio: 16/10;
 }
 .card__t {
-  margin-top: 22px;
-  font-size: 20px;
-  letter-spacing: -0.01em;
+  font-weight: 400;
+  font-size: clamp(24px, 2.2vw, 32px);
+  letter-spacing: -0.02em;
 }
 .card__d {
   margin-top: 8px;
@@ -568,6 +520,27 @@ section[id] {
   display: inline-block;
   margin-top: 16px;
   font-size: 14.5px;
+}
+.card__links {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+.card__links .card__link {
+  margin-top: 0;
+}
+.card__icon {
+  display: grid;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.card__icon:hover {
+  color: var(--ink);
+}
+.card__icon svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* Selected work */
@@ -1339,7 +1312,7 @@ dialog.closing::backdrop {
   }
 }
 @media (max-width: 860px) {
-  .nav__links .nav__cv,
+  .nav__links .nav__text,
   .nav__links .btn--ghost {
     display: none;
   }
@@ -1360,7 +1333,10 @@ dialog.closing::backdrop {
   .row__d {
     grid-column: 1;
   }
-  .cards,
+  .card {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
   .beyond,
   .meta,
   .two,
