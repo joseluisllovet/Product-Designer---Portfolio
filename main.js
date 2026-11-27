@@ -418,4 +418,125 @@ setInterval(() => {
   }, 200);
 }, 5000);
 
+/* Slower, smoother scrolling: the mouse wheel and in-page links glide to their
+   target instead of jumping. Touch, keys, dialogs, carousels and reduced motion
+   keep the browser's own scrolling. */
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const EASE = 0.07; // share of the remaining distance covered each frame
+  let target = scrollY;
+  let current = scrollY;
+  let raf = 0;
+  const maxScroll = () => html.scrollHeight - innerHeight;
+  const step = () => {
+    current += (target - current) * EASE;
+    if (Math.abs(target - current) < 0.5) current = target;
+    scrollTo(0, current);
+    raf = current === target ? 0 : requestAnimationFrame(step);
+  };
+  const glideTo = (y) => {
+    if (!raf) current = scrollY;
+    target = Math.max(0, Math.min(maxScroll(), y));
+    if (!raf) raf = requestAnimationFrame(step);
+  };
+  addEventListener(
+    'wheel',
+    (e) => {
+      const busy = html.classList.contains('locked') || html.classList.contains('intro-on');
+      if (e.ctrlKey || busy || e.target.closest('dialog, .track, .nav__sheet')) return;
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      glideTo((raf ? target : scrollY) + e.deltaY * (e.deltaMode === 1 ? 40 : 1));
+    },
+    { passive: false },
+  );
+  // scrolling some other way (keys, scrollbar, touch) resets the glide
+  addEventListener(
+    'scroll',
+    () => {
+      if (!raf) target = current = scrollY;
+    },
+    { passive: true },
+  );
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    const hash = link.getAttribute('href');
+    const section = hash.length > 1 && hash !== '#top' ? $(hash) : null;
+    if (hash.length > 1 && hash !== '#top' && !section) return;
+    e.preventDefault();
+    const offset = section ? parseFloat(getComputedStyle(section).scrollMarginTop) || 0 : 0;
+    glideTo(section ? section.getBoundingClientRect().top + scrollY - offset : 0);
+  });
+}
+
+/* Intro: count to 100 while the line fills, then the name flies into the menu
+   and becomes the logo, the screen fades and the hero comes in (see .intro in styles.css) */
+if (html.classList.contains('intro-on')) {
+  const intro = $('.intro');
+  const name = $('.intro__name');
+  const count = $('#intro-count');
+  const t0 = performance.now();
+  const duration = 1400;
+  const land = () => {
+    // move and shrink the big name onto the menu logo
+    const from = name.getBoundingClientRect();
+    const to = $('.nav__name > span').getBoundingClientRect();
+    const scale = to.width / from.width;
+    // line boxes differ in height, so line up the centres of the text, not the tops
+    const dy = to.top + to.height / 2 - (from.top + (from.height * scale) / 2);
+    name.style.transform = `translate(${to.left - from.left}px, ${dy}px) scale(${scale})`;
+    html.classList.add('intro-out');
+    name.addEventListener(
+      'transitionend',
+      () => {
+        intro.remove();
+        $('.nav__name').style.visibility = 'visible';
+        setTimeout(() => {
+          html.classList.remove('intro-on', 'intro-out');
+          $('.nav__name').style.visibility = '';
+        }, 700);
+      },
+      { once: true },
+    );
+  };
+  const tick = (now) => {
+    const p = Math.min(1, (now - t0) / duration);
+    const eased = 1 - (1 - p) ** 3;
+    count.textContent = Math.round(eased * 100);
+    intro.style.setProperty('--p', eased);
+    if (p < 1) return requestAnimationFrame(tick);
+    land();
+  };
+  requestAnimationFrame(tick);
+}
+
+/* Easter eggs. To add one: put its id in EGGS, then call findEgg('its-id') when someone
+   discovers it. The footer shows how many exist and how many this visitor has found;
+   found eggs are remembered in this browser only. */
+const EGGS = [];
+const eggsFound = new Set(
+  (() => {
+    try {
+      return JSON.parse(localStorage.getItem('eggs-found')) || [];
+    } catch {
+      return [];
+    }
+  })(),
+);
+const renderEggs = () => {
+  const found = EGGS.filter((id) => eggsFound.has(id)).length;
+  $('#eggs').innerHTML = EGGS.length
+    ? `${EGGS.length} easter egg${EGGS.length === 1 ? '' : 's'} · <b>${found}</b> found`
+    : 'Easter eggs coming soon';
+};
+function findEgg(id) {
+  if (!EGGS.includes(id) || eggsFound.has(id)) return;
+  eggsFound.add(id);
+  try {
+    localStorage.setItem('eggs-found', JSON.stringify([...eggsFound]));
+  } catch {}
+  renderEggs();
+}
+renderEggs();
+
 $('#year').textContent = new Date().getFullYear();

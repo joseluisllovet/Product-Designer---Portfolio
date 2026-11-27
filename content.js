@@ -248,7 +248,7 @@ const CLIENTS = [
 
 // Testimonials: name, role, the short text on the card, the full text in the popup,
 // and an optional photo (a square black-and-white file next to index.html).
-// One without text shows placeholder copy until the real recommendation arrives.
+// Those without text show placeholder copy until the real recommendation arrives.
 const QUOTES = [
   { name: 'Kasper Tikær', role: 'Head of Design, AeroGuest', photo: 'kasper-tikaer.jpg' },
   {
@@ -261,6 +261,11 @@ const QUOTES = [
       'José is an invaluable product designer within our Product Team at Formalize, with a strong commitment and a positive impact on our team’s efficiency. He built our design system from scratch and owned its ongoing maintenance, while also designing new components and end-to-end pages and flows.',
       'José possesses a strong eye for UI, is highly proficient in Figma, and is highly proactive and self-driven. I wholeheartedly recommend José.',
     ],
+  },
+  {
+    name: 'Morten Becker Grønning',
+    role: 'CTO, AeroGuest',
+    photo: 'morten-becker-gronning.jpg',
   },
   {
     name: 'Toni Borras',

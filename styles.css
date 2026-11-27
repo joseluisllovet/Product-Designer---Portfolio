@@ -31,7 +31,6 @@
   box-sizing: border-box;
 }
 html {
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
 html.locked {
@@ -351,25 +350,28 @@ section[id] {
 
 /* Hero */
 .hero {
-  display: grid;
-  grid-template-columns: 7fr 5fr;
-  gap: 48px;
-  padding-top: clamp(28px, 4vw, 56px);
+  padding-top: clamp(40px, 6vw, 80px);
 }
 .hero__text {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 24px;
+  max-width: 800px;
 }
 .hero .lede {
-  max-width: 60ch;
-  font-weight: 600;
-  line-height: 1.4;
+  max-width: 62ch;
+  font-size: 20px;
+  line-height: 1.55;
+}
+.hero .display {
+  font-size: clamp(40px, 6.2vw, 88px);
+}
+.hero__now {
+  color: var(--brand);
 }
 .hero__eyebrow {
-  font-size: 12px;
-  letter-spacing: 1.5px;
+  font-size: 15px;
+  letter-spacing: 1.8px;
   text-transform: uppercase;
   color: var(--brand);
   margin-bottom: 12px;
@@ -412,17 +414,16 @@ section[id] {
   flex-wrap: wrap;
   margin-top: 32px;
 }
-.hero__figure {
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  min-height: 520px;
-  background: var(--soft);
-}
-.hero__photo {
-  width: 100%;
-  height: 100%;
+/* small round photo above the eyebrow: black and white, colour comes back on hover */
+.hero__avatar {
+  display: block;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 24px;
+  border-radius: 50%;
   object-fit: cover;
-  object-position: 50% 30%;
+  filter: grayscale(1);
+  transition: filter 0.3s var(--ease-standard);
 }
 
 /* Placeholder mockups */
@@ -921,35 +922,74 @@ section[id] {
 
 /* Footer */
 .foot {
-  padding-top: 80px;
+  padding-top: 96px;
   padding-bottom: 40px;
   margin-top: var(--space);
   background: var(--soft);
 }
-.foot__mail {
-  display: inline-block;
-  margin-top: 20px;
-  font-size: clamp(28px, 3.2vw, 40px);
-  letter-spacing: -0.025em;
-  border-bottom: 1px solid var(--line);
+.foot__cta {
   font-family: var(--font-display);
   font-weight: 500;
-  color: var(--ink);
+  font-size: clamp(48px, 7vw, 96px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+.foot__talk {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25em;
+}
+.foot__talk em {
+  color: var(--brand);
+}
+.foot__talk span {
+  transition: transform 0.16s var(--ease-standard);
 }
 .foot__bar {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-top: 48px;
+  display: grid;
+  gap: 16px;
+  margin-top: 96px;
   padding-top: 24px;
   border-top: 1px solid var(--line);
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   color: var(--muted);
+}
+.foot__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px 24px;
+  flex-wrap: wrap;
 }
 .foot__bar nav {
   display: flex;
   gap: 20px;
+}
+/* Dannebrog, 37:28 with the cross off-centre towards the hoist */
+.foot__flag {
+  width: 15px;
+  height: 11px;
+  margin-left: 4px;
+  vertical-align: -1px;
+  border-radius: 1px;
+}
+.foot__eggs {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+/* a small egg */
+.foot__eggs i {
+  width: 11px;
+  height: 14px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: var(--tint-2);
+}
+.foot__eggs b {
+  color: var(--brand);
+  font-weight: 600;
 }
 
 /* Dialogs / overlays */
@@ -1374,7 +1414,7 @@ dialog.closing::backdrop {
 .link-u,
 .card__link,
 .card__icon,
-.foot__mail,
+.foot__talk,
 .foot__bar a,
 .case__title,
 .case__link,
@@ -1391,7 +1431,7 @@ dialog.closing::backdrop {
   .link-u:hover,
   .card__link:hover,
   .card__icon:hover,
-  .foot__mail:hover,
+  .foot__talk:hover,
   .foot__bar a:hover,
   .case:hover .case__title,
   .case:hover .case__link,
@@ -1399,8 +1439,11 @@ dialog.closing::backdrop {
   .exp__btn:hover .exp__co {
     color: var(--brand);
   }
-  .foot__mail:hover {
-    border-color: var(--brand);
+  .hero__avatar:hover {
+    filter: none;
+  }
+  .foot__talk:hover span {
+    transform: translateX(8px);
   }
   .nav__name:hover .nav__e::after {
     transform: translateX(-35%) scale(1.18);
@@ -1424,14 +1467,117 @@ dialog.closing::backdrop {
   }
 }
 
+/* Intro: a short loading screen on every visit. When it reaches 100% the name
+   flies into the menu and becomes the logo, the screen fades and the hero comes in.
+   An exception to the design system's "no entrance choreography", asked for by José.
+   The class is set in <head> so the screen is there from the first paint. */
+.intro {
+  display: none;
+}
+.intro-on .intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+}
+.intro-on .intro::before,
+.intro-on .intro::after {
+  content: '';
+  position: absolute;
+  transition: opacity 0.6s var(--ease-standard);
+}
+.intro-on .intro::before {
+  inset: 0;
+  background: var(--bg);
+}
+/* progress line */
+.intro-on .intro::after {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--brand);
+  transform: scaleX(var(--p, 0));
+  transform-origin: left;
+}
+.intro__name {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(36px, 5vw, 56px);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  transform-origin: 0 0;
+  transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.intro__count {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 24px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  transition: opacity 0.3s var(--ease-standard);
+}
+.intro-out .intro {
+  pointer-events: none;
+}
+.intro-out .intro::before,
+.intro-out .intro::after,
+.intro-out .intro__count {
+  opacity: 0;
+}
+/* the menu logo waits until the flying name lands on it */
+.intro-on .nav__name {
+  visibility: hidden;
+}
+.intro-on:not(.intro-out) {
+  overflow: hidden;
+}
+.intro-on .hero__eyebrow,
+.intro-on .hero .display,
+.intro-on .hero .lede,
+.intro-on .hero__actions,
+.intro-on .hero__avatar {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.intro-out .hero__eyebrow,
+.intro-out .hero .display,
+.intro-out .hero .lede,
+.intro-out .hero__actions,
+.intro-out .hero__avatar {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.7s var(--ease);
+}
+.intro-out .hero__eyebrow {
+  transition-delay: 0.35s;
+}
+.intro-out .hero .display {
+  transition-delay: 0.45s;
+}
+.intro-out .hero__avatar {
+  transition-delay: 0.3s;
+}
+.intro-out .hero .lede {
+  transition-delay: 0.55s;
+}
+.intro-out .hero__actions {
+  transition-delay: 0.65s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   dialog[open] {
     animation: none;
   }
-  html {
-    scroll-behavior: auto;
-  }
   .case__link span,
+  .foot__talk span,
   .nav__e::after {
     transition: none;
   }
@@ -1454,12 +1600,9 @@ dialog.closing::backdrop {
   .nav__links .btn--ghost {
     display: none;
   }
-  .hero {
-    grid-template-columns: 1fr;
-  }
-  .hero__figure {
-    min-height: 0;
-    aspect-ratio: 4/4.4;
+  .hero__avatar {
+    width: 96px;
+    height: 96px;
   }
   .stats {
     gap: 16px;
