@@ -247,14 +247,14 @@ const CLIENTS = [
 ];
 
 // Testimonials: name, role, the short text on the card, the full text in the popup,
-// and an optional photo (a square black-and-white file next to index.html).
+// and an optional photo (a square black-and-white file in images/).
 // Those without text show placeholder copy until the real recommendation arrives.
 const QUOTES = [
-  { name: 'Kasper Tikær', role: 'Head of Design, AeroGuest', photo: 'kasper-tikaer.jpg' },
+  { name: 'Kasper Tikær', role: 'Head of Design, AeroGuest', photo: 'images/kasper-tikaer.jpg' },
   {
     name: 'Mikkel Køster',
     role: 'Head of Product Design, Formalize',
-    photo: 'mikkel-koster.jpg',
+    photo: 'images/mikkel-koster.jpg',
     short:
       'José is an invaluable product designer within our Product Team at Formalize. He built our design system from scratch and owned its ongoing maintenance.',
     full: [
@@ -265,12 +265,12 @@ const QUOTES = [
   {
     name: 'Morten Becker Grønning',
     role: 'CTO, AeroGuest',
-    photo: 'morten-becker-gronning.jpg',
+    photo: 'images/morten-becker-gronning.jpg',
   },
   {
     name: 'Toni Borras',
     role: 'Founder & CEO, Borrads',
-    photo: 'toni-borras.jpg',
+    photo: 'images/toni-borras.jpg',
     short:
       'He faces challenges with enthusiasm and finds sensible and practical solutions. The results of his work always maintained a high standard of quality, even under changing requirements and adverse conditions.',
     full: [
