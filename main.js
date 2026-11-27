@@ -11,22 +11,26 @@ const metaHTML = (rows) =>
   '<dl class="meta">' +
   rows.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('') +
   '</dl>';
-const who = (q) => `<i></i><div><b>${q.name}</b><span>${q.role}</span></div>`;
+const who = (q) =>
+  (q.photo ? `<img src="${q.photo}" alt="" width="38" height="38">` : '<i></i>') +
+  `<div><b>${q.name}</b><span>${q.role}</span></div>`;
 
 $('#work-list').innerHTML = CASES.map(
   (c, i) => `
   <article class="case">
-    <div class="ph case__media rv" data-case="${i}" role="button" tabindex="0" aria-label="Open case study: ${c.title}" data-ph="Case image · 16:9">${browser}</div>
-    <div class="case__head rv"><h3 class="h2">${c.title}</h3><span class="case__idx">0${i + 1} / 0${CASES.length}</span></div>
-    <p class="lede case__sub rv">${c.sub}</p>
-    <div class="rv">${metaHTML(c.meta)}</div>
-    <button class="btn btn--primary btn--sm rv" data-case="${i}">See case study</button>
+    <div class="case__text">
+      <p class="case__kicker">${c.kicker[0]}<span>${c.kicker[1]}</span></p>
+      <h3 class="case__title">${c.title}</h3>
+      <p class="case__sub">${c.sub.replace(/<\/?strong>/g, '')}</p>
+      <button class="case__link" data-case="${i}" aria-label="View case: ${c.title}">View case <span aria-hidden="true">→</span></button>
+    </div>
+    <div class="ph case__media" data-ph="Case image · 16:10">${browser}</div>
   </article>`,
 ).join('');
 
 $('#clients-grid').innerHTML = CLIENTS.map(
   (c, i) => `
-  <button class="client rv" data-client="${i}">
+  <button class="client" data-client="${i}">
     <span class="client__logo"><i></i>${c.name}</span>
     <span class="client__d">${c.d}</span>
     <span class="pill">${c.tag}</span>
@@ -395,206 +399,23 @@ document.addEventListener('keydown', (e) => {
     setMenu(false);
     menu.focus();
   }
-  // the case image is a div with role="button"
-  const media = e.target.closest('.case__media');
-  if (media && (e.key === 'Enter' || e.key === ' ')) {
-    e.preventDefault();
-    openCase(+media.dataset.case);
-  }
 });
 
-/* Scroll reveal, staggered among siblings. Once an element is in, the reveal
-   classes come off so its own hover and press transitions work again. */
-const revealIO = new IntersectionObserver(
-  (entries) =>
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      const siblings = [...el.parentElement.children].filter((x) => x.classList.contains('rv'));
-      el.style.transitionDelay = Math.min(siblings.indexOf(el), 5) * 70 + 'ms';
-      el.addEventListener('transitionend', function done(e) {
-        if (e.target !== el || e.propertyName !== 'opacity') return;
-        el.removeEventListener('transitionend', done);
-        el.classList.remove('rv', 'in');
-        el.style.transitionDelay = '';
-      });
-      el.classList.add('in');
-      revealIO.unobserve(el);
-    }),
-  { rootMargin: '0px 0px -8% 0px' },
-);
-$$('.rv').forEach((el) => revealIO.observe(el));
-
-const countIO = new IntersectionObserver(
-  (entries) =>
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target,
-        end = +el.dataset.count,
-        suffix = el.dataset.suffix || '';
-      const t0 = performance.now(),
-        duration = 1200;
-      countIO.unobserve(el);
-      const tick = (now) => {
-        const p = Math.min(1, (now - t0) / duration);
-        el.textContent = Math.round(end * (1 - (1 - p) ** 4)) + suffix;
-        if (p < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    }),
-  { threshold: 0.6 },
-);
-$$('[data-count]').forEach((el) => countIO.observe(el));
-
-/* Easter egg */
-// Click the hero photo 5 times in a row and bitcoins rain down the screen.
-// Nothing is stored; it can be triggered again with 5 more clicks.
-function initBitcoinRain(figure) {
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const GRAVITY = 520,
-    MAX_SPEED = 420;
-  let clicks = 0,
-    clickTimer = 0,
-    canvas,
-    ctx,
-    coins = [],
-    sprite,
-    last = 0,
-    raf = 0;
-
-  const rand = (a, b) => a + Math.random() * (b - a);
-
-  // One coin face drawn once, then stamped for every coin. Bitcoin orange,
-  // with the ₿ tilted the way it is in the logo.
-  function drawCoin(size) {
-    const c = document.createElement('canvas');
-    c.width = c.height = size;
-    const g = c.getContext('2d'),
-      r = size / 2;
-    g.translate(r, r);
-    const face = g.createRadialGradient(-r * 0.35, -r * 0.4, r * 0.1, 0, 0, r);
-    face.addColorStop(0, '#ffd27a');
-    face.addColorStop(0.55, '#f7931a');
-    face.addColorStop(1, '#c46a00');
-    g.fillStyle = face;
-    g.beginPath();
-    g.arc(0, 0, r * 0.98, 0, Math.PI * 2);
-    g.fill();
-    g.strokeStyle = 'rgba(255, 255, 255, .38)';
-    g.lineWidth = r * 0.07;
-    g.beginPath();
-    g.arc(0, 0, r * 0.8, 0, Math.PI * 2);
-    g.stroke();
-    // The ₿ is drawn as a B with two short bars, so it doesn't depend on the
-    // font having the ₿ character.
-    g.rotate((14 * Math.PI) / 180);
-    const f = r * 1.1;
-    g.font = `800 ${f}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`;
-    g.textAlign = 'center';
-    g.textBaseline = 'middle';
-    const w = g.measureText('B').width,
-      left = -w / 2;
-    const symbol = (colour, dx, dy) => {
-      g.fillStyle = colour;
-      g.fillText('B', dx, dy + f * 0.04);
-      for (const x of [left + w * 0.22, left + w * 0.5]) {
-        g.fillRect(x + dx, -f * 0.5 + dy, f * 0.09, f * 0.16);
-        g.fillRect(x + dx, f * 0.34 + dy, f * 0.09, f * 0.16);
-      }
-    };
-    symbol('rgba(150, 70, 0, .45)', r * 0.04, r * 0.05);
-    symbol('#fff', 0, 0);
-    return c;
+/* Hero greeting: Hi, Hey, Hej, Hola, Hallo, Grüezi, one every 5 s */
+const hello = $('.hero__hello');
+const HELLOS = ['Hi', 'Hey', 'Hej', 'Hola', 'Hallo', 'Grüezi'];
+let helloIndex = 0;
+setInterval(() => {
+  helloIndex = (helloIndex + 1) % HELLOS.length;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    hello.textContent = HELLOS[helloIndex];
+    return;
   }
-
-  function setup() {
-    canvas = document.createElement('canvas');
-    canvas.className = 'coin-rain';
-    canvas.setAttribute('aria-hidden', 'true');
-    ctx = canvas.getContext('2d');
-    sprite = drawCoin(128);
-  }
-
-  function resize() {
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    canvas.width = innerWidth * dpr;
-    canvas.height = innerHeight * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  function rain() {
-    if (!canvas) setup();
-    if (!canvas.isConnected) {
-      document.body.append(canvas);
-      resize();
-    }
-    const count = Math.round(Math.min(24, Math.max(10, innerWidth / 60)));
-    for (let i = 0; i < count; i++) {
-      const size = rand(24, 40);
-      coins.push({
-        x: rand(-20, innerWidth + 20),
-        y: -size - rand(0, 40),
-        size,
-        vx: rand(-20, 20),
-        vy: rand(20, 90),
-        delay: rand(0, 2.4),
-        tilt: rand(-0.15, 0.15),
-      });
-    }
-    // small coins behind, big ones in front
-    coins.sort((a, b) => a.size - b.size);
-    if (!raf) {
-      last = performance.now();
-      raf = requestAnimationFrame(frame);
-    }
-  }
-
-  function frame(now) {
-    const dt = Math.min(0.05, (now - last) / 1000);
-    last = now;
-    ctx.clearRect(0, 0, innerWidth, innerHeight);
-    coins = coins.filter((c) => c.y < innerHeight + c.size);
-    for (const c of coins) {
-      if (c.delay > 0) {
-        c.delay -= dt;
-        continue;
-      }
-      c.vy = Math.min(MAX_SPEED, c.vy + GRAVITY * dt * ((c.size / 40) * 0.4 + 0.6));
-      c.x += c.vx * dt;
-      c.y += c.vy * dt;
-      ctx.save();
-      ctx.globalAlpha = 0.9;
-      ctx.translate(c.x, c.y);
-      ctx.rotate(c.tilt);
-      ctx.drawImage(sprite, -c.size / 2, -c.size / 2, c.size, c.size);
-      ctx.restore();
-    }
-    if (coins.length) raf = requestAnimationFrame(frame);
-    else {
-      raf = 0;
-      canvas.remove();
-    }
-  }
-
-  figure.addEventListener('click', () => {
-    clearTimeout(clickTimer);
-    clicks++;
-    if (clicks >= 5) {
-      clicks = 0;
-      if (!reduce) rain();
-      return;
-    }
-    if (!reduce)
-      figure.animate(
-        [{ transform: 'none' }, { transform: 'scale(.985) rotate(-.4deg)' }, { transform: 'none' }],
-        { duration: 240, easing: 'ease-out' },
-      );
-    clickTimer = setTimeout(() => (clicks = 0), 1500);
-  });
-  addEventListener('resize', () => {
-    if (canvas?.isConnected) resize();
-  });
-}
-initBitcoinRain($('.hero__figure'));
+  hello.classList.add('out');
+  setTimeout(() => {
+    hello.textContent = HELLOS[helloIndex];
+    hello.classList.remove('out');
+  }, 200);
+}, 5000);
 
 $('#year').textContent = new Date().getFullYear();

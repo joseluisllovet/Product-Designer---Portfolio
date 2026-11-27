@@ -2,9 +2,10 @@
 // Keep the quotes around each text. For ’ use the curly apostrophe, or \' inside '...'.
 
 // Selected work. Each case is a card on the page and a full case study when opened.
-//   sub      line under the title (<strong> = dark part)
-//   meta     Role / Hands-on / Team, shown on the card and in the case study
-//   details  Industry / Scope / Timeline, shown only in the case study
+//   kicker   small line above the title on the card: [company · role, years]
+//   sub      line under the title (<strong> = dark part in the case study)
+//   meta     Role / Hands-on / Team, shown in the case study
+//   details  Industry / Scope / Timeline, shown in the case study
 //   slides   carousel: [title, caption]
 //   context, challenge, ba (before & after), result: the case study sections
 //   h = section heading, m = result metrics [number, label]
@@ -12,6 +13,7 @@ const CASES = [
   {
     id: 'aeroguest-ds',
     title: 'AeroGuest Design System',
+    kicker: ['AeroGuest · Product Designer', '2025 – 2026'],
     sub: '<strong>One system for three products,</strong> built from scratch for a digital hospitality platform.',
     meta: [
       ['Role', 'Product Designer, owner of the system'],
@@ -72,6 +74,7 @@ const CASES = [
   {
     id: 'aeroguest-keys',
     title: 'Digital Keys',
+    kicker: ['AeroGuest · Product Designer & UX Specialist', '2026'],
     sub: '<strong>Where the app meets the door.</strong> Connected guest experiences where the app and physical locks must work as one.',
     meta: [
       ['Role', 'Product Designer & UX Specialist'],
@@ -132,6 +135,7 @@ const CASES = [
   {
     id: 'formalize',
     title: 'Formalize',
+    kicker: ['Formalize · Product Designer', '2024 – 2025'],
     sub: '<strong>The company’s first design system,</strong> and clear workflows for a compliance SaaS platform.',
     meta: [
       ['Role', 'Product Designer, one of the first'],
@@ -242,23 +246,41 @@ const CLIENTS = [
   },
 ];
 
-// Testimonials. Placeholder until the real recommendations arrive.
+// Testimonials: name, role, the short text on the card, the full text in the popup,
+// and an optional photo (a square black-and-white file next to index.html).
+// One without text shows placeholder copy until the real recommendation arrives.
 const QUOTES = [
-  ['Lorem Ipsum', 'Head of Lorem, Ipsum'],
-  ['Dolor Sitamet', 'Principal Designer, Dolor'],
-  ['Consec Tetur', 'Lead Researcher, Amet'],
-  ['Adipi Scing', 'CTO, Consectetur'],
-  ['Elit Seddo', 'Product Manager, Elit'],
-  ['Eius Modtempor', 'Founder, Tempor'],
-].map(([name, role]) => ({
-  name,
-  role,
+  { name: 'Kasper Tikær', role: 'Head of Design, AeroGuest', photo: 'kasper-tikaer.jpg' },
+  {
+    name: 'Mikkel Køster',
+    role: 'Head of Product Design, Formalize',
+    photo: 'mikkel-koster.jpg',
+    short:
+      'José is an invaluable product designer within our Product Team at Formalize. He built our design system from scratch and owned its ongoing maintenance.',
+    full: [
+      'José is an invaluable product designer within our Product Team at Formalize, with a strong commitment and a positive impact on our team’s efficiency. He built our design system from scratch and owned its ongoing maintenance, while also designing new components and end-to-end pages and flows.',
+      'José possesses a strong eye for UI, is highly proficient in Figma, and is highly proactive and self-driven. I wholeheartedly recommend José.',
+    ],
+  },
+  {
+    name: 'Toni Borras',
+    role: 'Founder & CEO, Borrads',
+    photo: 'toni-borras.jpg',
+    short:
+      'He faces challenges with enthusiasm and finds sensible and practical solutions. The results of his work always maintained a high standard of quality, even under changing requirements and adverse conditions.',
+    full: [
+      'José Luis was employed as WordPress Web Designer and Developer in our company, planning, designing and developing websites using WordPress, HTML, CSS and JavaScript, and maintaining over 30 websites. José possesses exceptionally comprehensive and outstanding specialized knowledge, which he employs with confidence and success in all of his activities.',
+      'He faces challenges with enthusiasm and finds sensible and practical solutions. The results of his work always maintained a high standard of quality, even under changing requirements and adverse conditions.',
+      'We would like to thank José for his consistently excellent performance. We are convinced that he will continue to achieve extraordinary successes in the future.',
+    ],
+  },
+].map((q) => ({
   short:
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.',
   full: [
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-    'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
   ],
+  ...q,
 }));
 
 // Experience, newest first: [company, dates, role, tag, description].

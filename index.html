@@ -8,17 +8,16 @@
 <meta property="og:title" content="José Luis Llovet · Product Designer & UX Specialist">
 <meta property="og:description" content="Complex workflows, made clear. Design systems, B2B SaaS and close collaboration with engineering.">
 <meta property="og:image" content="photo.jpg">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#fefcfa">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet">
-<script>document.documentElement.classList.add('js')</script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,500;1,9..40,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <header class="nav" id="nav">
-  <a class="nav__name" href="#top">José Luis Llovet</a>
+  <a class="nav__name" href="#top" aria-label="José Llovet, back to top"><span aria-hidden="true">Jos<span class="nav__e">e</span> Llovet</span></a>
   <nav class="nav__anchors" aria-label="Sections">
     <a href="#about">About</a>
     <a href="#work">Work</a>
@@ -52,46 +51,48 @@
   <section class="hero wrap">
     <div class="hero__text">
       <!-- availability badge, hidden for now
-      <p class="hero__avail rv"><span class="hero__dot"></span>Open to new opportunities · Aarhus, Denmark</p>
+      <p class="hero__avail"><span class="hero__dot"></span>Open to new opportunities · Aarhus, Denmark</p>
       -->
-      <h1 class="display rv">Product<br>Designer &amp;<br>UX Specialist.</h1>
-      <div class="rv">
-        <p class="lede">6+ years crafting digital interfaces, and 3+ years in product teams, most recently on data-heavy B2B SaaS. I turn complex workflows into clear, consistent interfaces built on scalable design systems.</p>
+      <div>
+        <p class="hero__eyebrow">Currently a Product Designer at AeroGuest, from&nbsp;Aarhus</p>
+        <h1 class="display" aria-label="Hi, I’m José Llovet"><span aria-hidden="true"><em class="hero__hello">Hi</em>, I’m<br>José Llovet</span></h1>
+      </div>
+      <div>
+        <p class="lede">3+ years designing B2B and B2C SaaS used by millions. I make complex workflows clear, on design systems built from&nbsp;scratch.</p>
         <div class="hero__actions">
           <a class="btn btn--primary" href="mailto:jlllovet00@gmail.com">Get in touch</a>
           <a class="btn btn--ghost" href="cv-jose-luis-llovet.pdf" download>Download CV</a>
         </div>
       </div>
     </div>
-    <div class="hero__figure rv">
+    <div class="hero__figure">
       <img class="hero__photo" src="photo.jpg" alt="José Luis Llovet" width="1200" height="1500">
     </div>
   </section>
 
   <section class="section wrap" id="about">
-    <p class="label rv">About me</p>
-    <h2 class="h2 rv">Complex workflows, made clear and consistent.</h2>
-    <p class="lede rv"><strong>I get into the problem before I touch Figma.</strong> With a Master’s in Interaction & UX Design and a background in advertising, I balance user needs, business goals and technical constraints, from early discovery to implementation-ready handoff.</p>
-    <div class="stats rv">
-      <div><p class="stat__n" data-count="6" data-suffix="+">0+</p><p class="stat__l">Years of design experience</p></div>
-      <div><p class="stat__n" data-count="3" data-suffix="+">0+</p><p class="stat__l">Years of product design experience</p></div>
-      <div><p class="stat__n" data-count="3">0</p><p class="stat__l">Design systems built from scratch</p></div>
-      <div><p class="stat__n" data-count="3">0</p><p class="stat__l">Products I’ve designed entirely myself</p></div>
+    <p class="label">About me</p>
+    <h2 class="h2">Complex workflows, made clear and consistent.</h2>
+    <p class="lede"><strong>I get into the problem before I touch Figma.</strong> With a Master’s in Interaction & UX Design and a background in advertising, I balance user needs, business goals and technical constraints, from early discovery to implementation-ready handoff. At Formalize I designed compliance tools used by over 5&nbsp;million employees; at AeroGuest, hotel operations and digital keys for more than a million guests across the Nordics and the&nbsp;UK.</p>
+    <div class="stats">
+      <div><p class="stat__n">3+</p><p class="stat__l">Years of product design experience</p></div>
+      <div><p class="stat__n">3</p><p class="stat__l">Design systems built from scratch</p></div>
+      <div><p class="stat__n">3</p><p class="stat__l">Products I’ve designed entirely myself</p></div>
     </div>
   </section>
 
   <section class="section wrap" id="skills">
-    <p class="label rv">How I work</p>
+    <p class="label">How I work</p>
     <div class="rows">
-      <div class="row rv">
+      <div class="row">
         <div class="row__head"><span class="row__n">01</span><h3 class="h3">Problem first</h3></div>
         <p class="row__d">I start with the problem, not the pixels. At AeroGuest I lead UX for key product areas, from problem framing to shipped feature, using Shape Up to scope the work and usability tests to check it with real users. <a class="link-u" href="#work">See selected work.</a></p>
       </div>
-      <div class="row rv">
+      <div class="row">
         <div class="row__head"><span class="row__n">02</span><h3 class="h3">Built to scale</h3></div>
         <p class="row__d">I’ve built three design systems from the ground up, including Formalize’s first, in Figma, and AeroGuest’s, which now supports all three of its products. Tokens, components, patterns and documentation that make implementation faster and more consistent.</p>
       </div>
-      <div class="row rv">
+      <div class="row">
         <div class="row__head"><span class="row__n">03</span><h3 class="h3">Close to code</h3></div>
         <p class="row__d">Before product design I built 20+ websites in HTML, CSS, JavaScript and WordPress, so I know how things get made. I partner daily with PMs and engineers and hand off designs that are ready to build.</p>
       </div>
@@ -99,20 +100,20 @@
   </section>
 
   <section class="section wrap" id="work">
-    <p class="label rv">Selected work</p>
+    <p class="label">Selected work</p>
     <div class="work" id="work-list"><!-- rendered from CASES --></div>
   </section>
 
   <section class="section wrap" id="clients">
-    <p class="label rv">Additional work</p>
-    <h2 class="h2 rv">More products, teams and websites I’ve shaped.</h2>
+    <p class="label">Additional work</p>
+    <h2 class="h2">More products, teams and websites I’ve shaped.</h2>
     <div class="clients" id="clients-grid"><!-- rendered from CLIENTS --></div>
   </section>
 
   <section class="section wrap" id="personal">
-    <p class="label rv">Side projects</p>
-    <p class="lede rv"><strong>Things I design and build myself.</strong> From the first sketch to live code, because knowing how it’s built makes me a better designer.</p>
-    <article class="card rv">
+    <p class="label">Side projects</p>
+    <p class="lede"><strong>Things I design and build myself.</strong> From the first sketch to live code, because knowing how it’s built makes me a better designer.</p>
+    <article class="card">
       <div class="ph card__media"><div class="mock-browser"><div class="mock-browser__bar"><i></i><i></i><i></i></div><div class="mock-browser__body"><div class="mock-side"></div><div class="mock-main"><div class="mock-kpis"><i></i><i></i><i></i></div><div class="mock-chart"></div></div></div></div></div>
       <div class="card__body">
         <h3 class="card__t">josellovet.com</h3>
@@ -127,8 +128,8 @@
   </section>
 
   <section class="section wrap" id="experience">
-    <p class="label rv">Experience</p>
-    <div class="exp rv" id="exp-list"><!-- rendered from EXPERIENCE --></div>
+    <p class="label">Experience</p>
+    <div class="exp" id="exp-list"><!-- rendered from EXPERIENCE --></div>
     <div class="exp__actions">
       <a class="btn btn--ghost btn--sm" href="cv-jose-luis-llovet.pdf" download>Download CV</a>
       <button class="btn btn--ghost btn--sm" id="exp-all" aria-expanded="false">Show all experience
@@ -137,8 +138,8 @@
   </section>
   <section class="section" id="testimonials" data-carousel>
     <div class="wrap">
-      <p class="label rv">What people say</p>
-      <h2 class="h2 rv">In their words.</h2>
+      <p class="label">What people say</p>
+      <h2 class="h2">In their words.</h2>
     </div>
     <div class="track" id="quotes"><!-- rendered from QUOTES --></div>
     <div class="wrap carousel__ctrl">
@@ -147,23 +148,25 @@
   </section>
 
   <section class="section wrap" id="beyond">
-    <p class="label rv">Beyond the work</p>
+    <p class="label">Beyond the work</p>
     <div class="beyond">
-      <div class="rv"><h3>On the water</h3><p>I sail. Reading the wind and adjusting as you go is not that different from shipping product.</p></div>
-      <div class="rv"><h3>In the ring</h3><p>Boxing at Rules Boxing Club in Aarhus. It keeps me disciplined and reminds me to push myself.</p></div>
-      <div class="rv"><h3>Always curious</h3><p>Long walks, beach escapes and a habit of asking why. Working hard, staying curious.</p></div>
+      <div><h3>On the water</h3><p>I sail. Reading the wind and adjusting as you go is not that different from shipping product.</p></div>
+      <div><h3>In the ring</h3><p>Boxing at Rules Boxing Club in Aarhus. It keeps me disciplined and reminds me to push myself.</p></div>
+      <div><h3>Always curious</h3><p>Long walks, beach escapes and a habit of asking why. Working hard, staying curious.</p></div>
     </div>
   </section>
 
 </main>
 
-<footer class="foot wrap" id="contact">
-  <p class="label">Get in touch</p>
-  <h2 class="h2">Let’s build something clear.</h2>
-  <a class="foot__mail" href="mailto:jlllovet00@gmail.com">jlllovet00@gmail.com</a>
-  <div class="foot__bar">
-    <span>© <span id="year"></span> José Luis Llovet · Aarhus, Denmark</span>
-    <nav><a href="https://www.linkedin.com/in/joseluisllr25" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/joseluisllovet" target="_blank" rel="noopener">GitHub</a><a href="cv-jose-luis-llovet.pdf" download>CV</a><a href="#top">Back to top ↑</a></nav>
+<footer class="foot" id="contact">
+  <div class="wrap">
+    <p class="label">Get in touch</p>
+    <h2 class="h2">Let’s build something clear.</h2>
+    <a class="foot__mail" href="mailto:jlllovet00@gmail.com">jlllovet00@gmail.com</a>
+    <div class="foot__bar">
+      <span>© <span id="year"></span> José Luis Llovet · Aarhus, Denmark</span>
+      <nav><a href="https://www.linkedin.com/in/joseluisllr25" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/joseluisllovet" target="_blank" rel="noopener">GitHub</a><a href="cv-jose-luis-llovet.pdf" download>CV</a><a href="#top">Back to top ↑</a></nav>
+    </div>
   </div>
 </footer>
 
