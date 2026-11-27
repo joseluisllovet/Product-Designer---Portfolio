@@ -264,7 +264,7 @@ const QUOTES = [
   },
   {
     name: 'Morten Becker Grønning',
-    role: 'CPO, AeroGuest',
+    role: 'Chief Product Officer, AeroGuest',
     photo: 'images/morten-becker-gronning.jpg',
   },
   {
